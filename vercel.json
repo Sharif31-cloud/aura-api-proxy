@@ -4,5 +4,9 @@
     "api/*.js": {
       "memory": 1024
     }
-  }
+  },
+  "routes": [
+    { "src": "/api/generate", "dest": "/api/generate" },
+    { "src": "/", "dest": "/api/index" }
+  ]
 }

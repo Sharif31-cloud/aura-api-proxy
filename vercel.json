@@ -1,12 +1,7 @@
 {
-  "version": 2,
   "functions": {
     "api/*.js": {
-      "memory": 1024
+      "runtime": "edge"
     }
-  },
-  "routes": [
-    { "src": "/api/generate", "dest": "/api/generate" },
-    { "src": "/", "dest": "/api/index" }
-  ]
+  }
 }

@@ -7,23 +7,33 @@ Deno.serve(async (req: Request) => {
 
     // ─── HEALTH CHECK ───
     if (url.pathname === "/") {
-        const maskedKey = API_KEY
-            ? API_KEY.substring(0, 6) + "..." + API_KEY.substring(API_KEY.length - 4)
-            : "NOT SET";
-
         return new Response(JSON.stringify({
             status: "Aura API Proxy is running ✅",
-            model: MODEL,
-            apiKey: maskedKey,
-            timeout: "60 seconds (Deno)",
-            platform: "Deno Deploy",
-            endpoints: { generate: "/api/generate" }
+            endpoints: { key: "/api/key", generate: "/api/generate" }
         }), {
             headers: { "Content-Type": "application/json" }
         });
     }
 
-    // ─── MAIN PROXY ENDPOINT ───
+    // ─── KEY FETCH: App gets the key, then calls Gemini directly ───
+    if (url.pathname === "/api/key" && req.method === "GET") {
+        const token = req.headers.get("x-app-token");
+        if (token !== APP_TOKEN) {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+                status: 403,
+                headers: { "Content-Type": "application/json" }
+            });
+        }
+
+        return new Response(JSON.stringify({
+            apiKey: API_KEY,
+            model: MODEL
+        }), {
+            headers: { "Content-Type": "application/json" }
+        });
+    }
+
+    // ─── PROXY: Still available as fallback ───
     if (url.pathname === "/api/generate" && req.method === "POST") {
         try {
             const token = req.headers.get("x-app-token");
@@ -65,7 +75,6 @@ Deno.serve(async (req: Request) => {
         }
     }
 
-    // ─── 404 ───
     return new Response(JSON.stringify({ error: "Not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" }

@@ -5,10 +5,10 @@ export default async function handler(req, res) {
     }
 
     try {
-        // The Android app will send the exact JSON payload in req.body
+        // The Android app sends the exact JSON payload in req.body
         const requestBody = req.body;
 
-        // 🔴 PASTE YOUR EXACT MODEL NAME HERE
+        // Using your exact model name that was working
         const modelName = "gemini-3.1-flash-lite"; 
         const apiKey = process.env.GEMINI_API_KEY; // Vercel will read this from Environment Variables
 

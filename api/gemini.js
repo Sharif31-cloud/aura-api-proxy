@@ -1,15 +1,5 @@
 export default async function handler(req, res) {
-  // 1. ✅ ADD CORS HEADERS HERE (Allows Chrome to talk to Vercel)
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // 2. ✅ HANDLE PREFLIGHT OPTIONS REQUEST (Chrome sends this before POST)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  // 3. Only allow POST (generateContent is a POST request)
+  // Only allow POST (generateContent is a POST request)
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
